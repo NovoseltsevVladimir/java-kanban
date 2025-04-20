@@ -4,13 +4,23 @@ public class Task {
     
     private String name;
     private String description;
+    private Status status;
+    private int id;
 
+    public Task (String name, String description) {
+
+        this.name = name;
+        this.description = description;
+        this.status = Status.NEW;
+
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     public Status getStatus() {
         return status;
     }
-
-    private Status status;
-    private int id;
 
     @Override
     public boolean equals(Object o) {
@@ -22,15 +32,6 @@ public class Task {
     @Override
     public int hashCode() {
         return id;
-    }
-
-    Task (String name, String description, int id) {
-        
-        this.name = name;
-        this.description = description;
-        this.id = id;
-        this.status = Status.NEW;
-
     }
 
     public int getId() {

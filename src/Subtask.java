@@ -1,21 +1,19 @@
 public class Subtask extends Task{
 
-    public Epic getParent() {
-        return parent;
+    private int parentId;
+
+    public int getParentId() {
+        return parentId;
     }
 
-    private Epic parent;
-
-    Subtask(String name, String description, int id, Epic parent) {
-        super(name, description, id);
-        this.parent = parent;
-        parent.addSubtask(this);
+    public Subtask(String name, String description, int parentId) {
+        super(name, description);
+        this.parentId = parentId;
     }
 
     public void setStatus (Status status) {
         if (this.getStatus() != status) {
             super.setStatus(status);
         }
-        parent.changeStatus();
     }
 }
