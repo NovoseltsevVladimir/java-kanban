@@ -87,6 +87,8 @@ public class TaskManager {
         Epic parent = getEpicById(parentId);
         parent.removeSubtask(id);
         subtasks.remove(id);
+
+        changeStatusOfEpic(parentId);
     }
 
     public void changeStatusOfEpic (int id) {
@@ -157,7 +159,7 @@ public class TaskManager {
         int id = newSubtask.getId();
         Subtask oldSubtask = subtasks.get(id);
         if (oldSubtask == null) {
-            System.out.println("Эпика с таким идентификатором не существует");
+            System.out.println("Подзадачи с таким идентификатором не существует");
             return;
         }
 
