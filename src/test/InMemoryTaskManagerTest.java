@@ -1,3 +1,6 @@
+package test;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -42,19 +45,19 @@ class InMemoryTaskManagerTest {
         assertNotNull(savedEpic, "Эпик не найден.");
         assertEquals(epic, savedEpic, "Эпики не совпадают.");
 
-        assertEquals(Status.NEW, epic.getStatus(), "У эпика не определяется статус NEW");
+        Assertions.assertEquals(Status.NEW, epic.getStatus(), "У эпика не определяется статус NEW");
 
         subtask1.setStatus(Status.IN_PROGRESS);
         taskManager.updateSubtask(subtask1);
         subtask2.setStatus(Status.DONE);
         taskManager.updateSubtask(subtask2);
 
-        assertEquals(Status.IN_PROGRESS, epic.getStatus(), "У эпика не определяется статус IN_PROGRESS");
+        Assertions.assertEquals(Status.IN_PROGRESS, epic.getStatus(), "У эпика не определяется статус IN_PROGRESS");
 
         subtask1.setStatus(Status.DONE);
         taskManager.updateSubtask(subtask1);
 
-        assertEquals(Status.DONE, epic.getStatus(), "У эпика не определяется статус DONE");
+        Assertions.assertEquals(Status.DONE, epic.getStatus(), "У эпика не определяется статус DONE");
 
         HashMap<Integer, Epic> epics = taskManager.getEpics();
 
@@ -68,8 +71,8 @@ class InMemoryTaskManagerTest {
         assertEquals(2, subtasksId.size(), "Неверное количество подзадач.");
 
         HashMap<Integer, Subtask> subtasks = taskManager.getSubtasks();
-        assertEquals(subtask1.getId(), subtasksId.get(0), "Подзадача 1 не совпадает с добавленной.");
-        assertEquals(subtask2.getId(), subtasksId.get(1), "Подзадача 2 не совпадает с добавленной.");
+        Assertions.assertEquals(subtask1.getId(), subtasksId.get(0), "Подзадача 1 не совпадает с добавленной.");
+        Assertions.assertEquals(subtask2.getId(), subtasksId.get(1), "Подзадача 2 не совпадает с добавленной.");
 
     }
 
