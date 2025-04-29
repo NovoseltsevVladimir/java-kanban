@@ -1,14 +1,47 @@
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        TaskManager taskManager = new TaskManager();
-        test(taskManager);
-
+        InMemoryTaskManager taskManager = Managers.getDefault();
+       test(taskManager);
+       printAllTasks (taskManager);
     }
 
-    public static void test (TaskManager taskManager) {
+    private static void printAllTasks(InMemoryTaskManager manager) {
+        System.out.println("Задачи:");
+        HashMap<Integer, Task> tasks = manager.getTasks();
+        HashMap<Integer, Epic> epics = manager.getEpics();
+        HashMap<Integer, Subtask> subtasks = manager.getSubtasks();
+
+        for (Task task : tasks.values()) {
+            System.out.println(task);
+        }
+        System.out.println("Эпики:");
+        for (Epic epic : epics.values()) {
+            System.out.println(epic);
+
+            ArrayList<Subtask> subtaskList= manager.getEpicSubtasks((Epic) epic);
+            for (Subtask task : subtaskList) {
+                manager.getTaskById(task.getId());
+                System.out.println("--> " + task);
+            }
+        }
+        System.out.println("Подзадачи:");
+        for (Subtask subtask : subtasks.values()) {
+            System.out.println(subtask);
+        }
+
+        System.out.println("История:");
+        ArrayList<Task> history = manager.getHistory();
+        for (Task task : history) {
+            System.out.println(task);
+        }
+    }
+
+    public static void test (InMemoryTaskManager taskManager) {
 
         Task task1 = new Task("Задача 1", "Сделать задачу 1");
         taskManager.createTask(task1);
@@ -46,7 +79,7 @@ public class Main {
         subtask3.setStatus(Status.DONE);
         taskManager.updateSubtask(subtask3);
         System.out.println(epic2.getStatus());
-        System.out.println(taskManager.getSubtasksOfEpic(epic1));
+        System.out.println(taskManager.getEpicSubtasks(epic1));
 
         taskManager.removeTaskById(task1.getId());
         taskManager.removeEpicById(epic1.getId());
