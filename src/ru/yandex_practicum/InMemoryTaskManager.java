@@ -1,5 +1,8 @@
+package ru.yandex_practicum;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -7,7 +10,7 @@ public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, Epic> epics = new HashMap<>();
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    InMemoryHistoryManager historyManager = Managers.getDefaultHistory();
+    private InMemoryHistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
     public HashMap<Integer, Subtask> getSubtasks() {
@@ -103,8 +106,7 @@ public class InMemoryTaskManager implements TaskManager {
         changeStatusOfEpic(parentId);
     }
 
-    @Override
-    public void changeStatusOfEpic (int id) {
+    private void changeStatusOfEpic (int id) {
 
         Epic epic = getEpicById(id);
 
@@ -193,9 +195,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList <Subtask> getEpicSubtasks (Epic epic) {
-        ArrayList <Subtask> subtasksList = new ArrayList<>();
-        ArrayList <Integer> subtasksId = epic.getSubtasksId();
+    public List <Subtask> getEpicSubtasks (Epic epic) {
+        List <Subtask> subtasksList = new ArrayList<>();
+        List <Integer> subtasksId = epic.getSubtasksId();
 
         for (int id:subtasksId) {
             subtasksList.add(getSubtaskById(id));
@@ -205,7 +207,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 

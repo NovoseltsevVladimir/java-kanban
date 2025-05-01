@@ -1,3 +1,5 @@
+package ru.yandex_practicum;
+
 public class Managers {
 
     public static InMemoryTaskManager getDefault() {

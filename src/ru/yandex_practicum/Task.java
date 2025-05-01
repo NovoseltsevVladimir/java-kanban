@@ -1,7 +1,7 @@
-import java.util.Objects;
+package ru.yandex_practicum;
 
 public class Task {
-    
+
     private String name;
     private String description;
     private Status status;

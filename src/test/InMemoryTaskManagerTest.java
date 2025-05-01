@@ -2,6 +2,7 @@ package test;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.yandex_practicum.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,10 +1,12 @@
 package test;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex_practicum.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class InMemoryHistoryManagerTest {
 
@@ -18,7 +20,7 @@ class InMemoryHistoryManagerTest {
 
         Task savedTask = taskManager.getTaskById(taskId);
 
-        ArrayList<Task> history = taskManager.getHistory();
+        List<Task> history = taskManager.getHistory();
 
         assertNotNull(history, "История не найдена.");
         assertEquals(1, history.size(), "Задача не добавлена в историю");

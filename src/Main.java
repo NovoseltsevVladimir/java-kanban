@@ -1,13 +1,16 @@
-import java.util.ArrayList;
+import ru.yandex_practicum.*;
+import ru.yandex_practicum.Task;
+
 import java.util.HashMap;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
 
         InMemoryTaskManager taskManager = Managers.getDefault();
-       test(taskManager);
-       printAllTasks (taskManager);
+        test(taskManager);
+        printAllTasks (taskManager);
     }
 
     private static void printAllTasks(InMemoryTaskManager manager) {
@@ -23,7 +26,7 @@ public class Main {
         for (Epic epic : epics.values()) {
             System.out.println(epic);
 
-            ArrayList<Subtask> subtaskList= manager.getEpicSubtasks((Epic) epic);
+            List<Subtask> subtaskList= manager.getEpicSubtasks((Epic) epic);
             for (Subtask task : subtaskList) {
                 manager.getTaskById(task.getId());
                 System.out.println("--> " + task);
@@ -35,7 +38,7 @@ public class Main {
         }
 
         System.out.println("История:");
-        ArrayList<Task> history = manager.getHistory();
+        List<Task> history = manager.getHistory();
         for (Task task : history) {
             System.out.println(task);
         }

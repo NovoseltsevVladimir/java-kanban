@@ -1,4 +1,6 @@
-public class Subtask extends Task{
+package ru.yandex_practicum;
+
+public class Subtask extends Task {
 
     private int parentId;
 
