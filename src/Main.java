@@ -1,7 +1,6 @@
 import ru.yandex_practicum.*;
 import ru.yandex_practicum.Task;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class Main {
@@ -15,15 +14,15 @@ public class Main {
 
     private static void printAllTasks(InMemoryTaskManager manager) {
         System.out.println("Задачи:");
-        HashMap<Integer, Task> tasks = manager.getTasks();
-        HashMap<Integer, Epic> epics = manager.getEpics();
-        HashMap<Integer, Subtask> subtasks = manager.getSubtasks();
+        List <Task> tasks = manager.getTasks();
+        List <Epic> epics = manager.getEpics();
+        List <Subtask> subtasks = manager.getSubtasks();
 
-        for (Task task : tasks.values()) {
+        for (Task task : tasks) {
             System.out.println(task);
         }
         System.out.println("Эпики:");
-        for (Epic epic : epics.values()) {
+        for (Epic epic : epics) {
             System.out.println(epic);
 
             List<Subtask> subtaskList= manager.getEpicSubtasks((Epic) epic);
@@ -33,7 +32,7 @@ public class Main {
             }
         }
         System.out.println("Подзадачи:");
-        for (Subtask subtask : subtasks.values()) {
+        for (Subtask subtask : subtasks) {
             System.out.println(subtask);
         }
 

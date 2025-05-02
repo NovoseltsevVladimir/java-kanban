@@ -7,9 +7,9 @@ public interface TaskManager <T extends Task> {
 
     int getNewId();
 
-    Map<Integer, Task> getTasks();
-    Map<Integer, Subtask> getSubtasks();
-    Map<Integer, Epic> getEpics();
+    List <Task> getTasks();
+    List <Subtask> getSubtasks();
+    List <Epic> getEpics();
     List<Subtask> getEpicSubtasks (Epic epic);
     List<T> getHistory ();
 

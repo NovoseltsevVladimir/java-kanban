@@ -1,11 +1,12 @@
 package ru.yandex_practicum;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryHistoryManager <T extends Task> implements HistoryManager {
 
     private final int HISTORY_LIMIT = 10;
-    private ArrayList <Task> history = new ArrayList<>(HISTORY_LIMIT);
+    private List<Task> history = new ArrayList<>(HISTORY_LIMIT);
 
     @Override
     public void add(Task task) {
@@ -16,7 +17,7 @@ public class InMemoryHistoryManager <T extends Task> implements HistoryManager {
     }
 
     @Override
-    public ArrayList <Task> getHistory() {
+    public List <Task> getHistory() {
         return history;
     }
 }

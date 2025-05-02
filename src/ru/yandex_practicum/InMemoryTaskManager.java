@@ -3,28 +3,32 @@ package ru.yandex_practicum;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
     private int lastId = 0;
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
-    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private Map<Integer, Task> tasks = new HashMap<>();
+    private Map<Integer, Epic> epics = new HashMap<>();
+    private Map<Integer, Subtask> subtasks = new HashMap<>();
     private InMemoryHistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
-    public HashMap<Integer, Subtask> getSubtasks() {
-        return subtasks;
+    public List <Subtask> getSubtasks() {
+        List subtasksList = new ArrayList<>(subtasks.values());
+        return subtasksList;
     }
 
     @Override
-    public HashMap<Integer, Epic> getEpics() {
-        return epics;
+    public List <Epic> getEpics() {
+        List epicsList = new ArrayList<>(epics.values());
+        return epicsList;
     }
 
     @Override
-    public HashMap<Integer, Task> getTasks() {
-        return tasks;
+    public List <Task> getTasks() {
+        List tasksList = new ArrayList<>(tasks.values());
+        return tasksList;
     }
 
     @Override
@@ -82,7 +86,7 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        ArrayList <Integer> subtasksId = epicForRemove.getSubtasksId();
+        List <Integer> subtasksId = epicForRemove.getSubtasksId();
         for (Integer subtaskId:subtasksId) {
             removeSubtaskById(subtaskId);
         }
@@ -113,7 +117,7 @@ public class InMemoryTaskManager implements TaskManager {
         boolean isStatusNew = true;
         boolean isStatusDone = true;
 
-        ArrayList <Integer> subtasksId = epic.getSubtasksId();
+        List <Integer> subtasksId = epic.getSubtasksId();
 
         for (Integer subtaskId:subtasksId) {
             Subtask subtask = getSubtaskById(subtaskId);
