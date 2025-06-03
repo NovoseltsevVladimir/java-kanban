@@ -13,7 +13,7 @@ public class Subtask extends Task {
         this.parentId = parentId;
     }
 
-    public void setStatus (Status status) {
+    public void setStatus(Status status) {
         if (this.getStatus() != status) {
             super.setStatus(status);
         }

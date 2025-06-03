@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class InMemoryHistoryManagerTest {
 
     @Test
-    void addAndGetHistory() {
+    void addAndRemoveAndGetHistory() {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
         Task task = new Task("Задача 1", "Сделать задачу 1");
@@ -21,15 +21,22 @@ class InMemoryHistoryManagerTest {
         Task savedTask = taskManager.getTaskById(taskId);
 
         List<Task> history = taskManager.getHistory();
+        System.out.println(history.size());
 
         assertNotNull(history, "История не найдена.");
         assertEquals(1, history.size(), "Задача не добавлена в историю");
         assertEquals(savedTask, history.get(0), "Задача не добавлена в историю");
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             taskManager.getTaskById(taskId);
         }
-        assertEquals(10, history.size(), "В истории не может быть больше 10 задач");
+
+        assertEquals(1, history.size(), "Задачи в истории просмотра дублируются");
+
+        InMemoryHistoryManager historyManager = taskManager.getHistoryManager();
+        historyManager.remove(taskId);
+        history = taskManager.getHistory();
+        assertEquals(0, history.size(), "Задача не удаляется");
 
     }
 

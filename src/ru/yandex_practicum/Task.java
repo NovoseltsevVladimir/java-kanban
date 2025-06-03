@@ -7,7 +7,7 @@ public class Task {
     private Status status;
     private int id;
 
-    public Task (String name, String description) {
+    public Task(String name, String description) {
 
         this.name = name;
         this.description = description;
@@ -18,6 +18,7 @@ public class Task {
     public void setId(int id) {
         this.id = id;
     }
+
     public Status getStatus() {
         return status;
     }
