@@ -1,7 +1,6 @@
 package ru.yandex_practicum;
 
 import java.util.List;
-import java.util.Map;
 
 public interface TaskManager<T extends Task> {
 
