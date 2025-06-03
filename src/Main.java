@@ -9,14 +9,14 @@ public class Main {
 
         InMemoryTaskManager taskManager = Managers.getDefault();
         test(taskManager);
-        printAllTasks (taskManager);
+        printAllTasks(taskManager);
     }
 
     private static void printAllTasks(InMemoryTaskManager manager) {
         System.out.println("Задачи:");
-        List <Task> tasks = manager.getTasks();
-        List <Epic> epics = manager.getEpics();
-        List <Subtask> subtasks = manager.getSubtasks();
+        List<Task> tasks = manager.getTasks();
+        List<Epic> epics = manager.getEpics();
+        List<Subtask> subtasks = manager.getSubtasks();
 
         for (Task task : tasks) {
             System.out.println(task);
@@ -25,7 +25,7 @@ public class Main {
         for (Epic epic : epics) {
             System.out.println(epic);
 
-            List<Subtask> subtaskList= manager.getEpicSubtasks((Epic) epic);
+            List<Subtask> subtaskList = manager.getEpicSubtasks((Epic) epic);
             for (Subtask task : subtaskList) {
                 manager.getTaskById(task.getId());
                 System.out.println("--> " + task);
@@ -43,7 +43,7 @@ public class Main {
         }
     }
 
-    public static void test (InMemoryTaskManager taskManager) {
+    public static void test(InMemoryTaskManager taskManager) {
 
         Task task1 = new Task("Задача 1", "Сделать задачу 1");
         taskManager.createTask(task1);
