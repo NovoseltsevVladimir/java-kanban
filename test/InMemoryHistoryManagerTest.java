@@ -32,9 +32,9 @@ class InMemoryHistoryManagerTest {
 
         assertEquals(1, history.size(), "Задачи в истории просмотра дублируются");
 
-       taskManager.removeTaskById(taskId);
-       history = taskManager.getHistory();
-       assertEquals(0, history.size(), "Задача не удаляется из истории");
+        taskManager.removeTaskById(taskId);
+        history = taskManager.getHistory();
+        assertEquals(0, history.size(), "Задача не удаляется из истории");
 
     }
 
