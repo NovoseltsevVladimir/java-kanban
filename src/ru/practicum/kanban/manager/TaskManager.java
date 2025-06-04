@@ -1,4 +1,8 @@
-package ru.yandex_practicum;
+package ru.practicum.kanban.manager;
+
+import ru.practicum.kanban.model.Epic;
+import ru.practicum.kanban.model.Subtask;
+import ru.practicum.kanban.model.Task;
 
 import java.util.List;
 
@@ -42,4 +46,9 @@ public interface TaskManager<T extends Task> {
 
     void removeAll();
 
+    void removeEpics();
+
+    void removeSubtasks();
+
+    void removeTasks ();
 }

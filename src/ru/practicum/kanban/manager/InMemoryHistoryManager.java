@@ -1,12 +1,15 @@
-package ru.yandex_practicum;
+package ru.practicum.kanban.manager;
+
+import ru.practicum.kanban.model.Task;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class InMemoryHistoryManager<T extends Task> implements HistoryManager {
 
-    private HistoryHashMap<Integer, Node> historyMap = new HistoryHashMap<>();
+    private Map <Integer, Node> historyMap = new HistoryHashMap<>();
 
     @Override
     public void add(Task task) {
@@ -14,7 +17,8 @@ public class InMemoryHistoryManager<T extends Task> implements HistoryManager {
             return;
         }
 
-        historyMap.linkLast(task);
+        HistoryHashMap history = (HistoryHashMap) historyMap;
+        history.linkLast(task);
     }
 
     @Override
@@ -32,52 +36,69 @@ public class InMemoryHistoryManager<T extends Task> implements HistoryManager {
             return tasksList;
         }
 
-        Node lastNode = historyMap.getTail();
+        HistoryHashMap history = (HistoryHashMap) historyMap;
+        Node lastNode = history.getTail();
 
         while (lastNode != null) {
 
-            tasksList.add(lastNode.getData());
-            lastNode = lastNode.getPrevious();
+            tasksList.add(lastNode.data);
+            lastNode = lastNode.previous;
 
         }
 
         return tasksList;
     }
 
-    public class HistoryHashMap<K, V> extends HashMap<K, V> {
+    public class Node {
+
+        public Node next = null;
+        public Node previous = null;
+        public Task data;
+
+        public Node(Task data) {
+            this.data = data;
+        }
+
+
+    }
+
+    public class HistoryHashMap<K, V extends Node> extends HashMap<K, V> {
 
         private Node head;
         private Node tail;
 
         public void linkLast(Task task) {
-            if (tail != null && tail.getData() == task) {
+            if (tail != null && tail.data == task) {
                 return;
+            }
+
+            Integer id = task.getId();
+            if (this.containsKey(id)) {
+                this.remove(id);
             }
 
             Node newNode = new Node(task);
 
             if (tail != null) {
-                tail.setNext(newNode);
+                tail.next = newNode;
             }
 
-            newNode.setPrevious(tail);
-            Integer id = task.getId();
+            newNode.previous = tail;
             put((K) id, (V) newNode);
         }
 
         @Override
         public V put(K key, V value) {
-            Node valueNode = (Node) value;
 
-            if (tail == valueNode) {
+            if (tail == value) {
                 return value;
             }
 
             if (head == null) {
-                head = valueNode;
+                head = value;
                 tail = head;
             } else {
-                tail = valueNode;
+                tail = value;
             }
             return super.put(key, value);
         }
@@ -86,17 +107,17 @@ public class InMemoryHistoryManager<T extends Task> implements HistoryManager {
         public V remove(Object key) {
             if (this.containsKey(key)) {
                 Node nodeForRemove = (Node) this.get(key);
-                Node previous = nodeForRemove.getPrevious();
-                Node next = nodeForRemove.getNext();
+                Node previous = nodeForRemove.previous;
+                Node next = nodeForRemove.next;
 
                 if (previous != null) {
-                    previous.setNext(next);
+                    previous.next = next;
                 } else {
                     head = next;
                 }
 
                 if (next != null) {
-                    next.setPrevious(previous);
+                    next.previous = previous;
                 } else {
                     tail = previous;
                 }
@@ -114,5 +135,9 @@ public class InMemoryHistoryManager<T extends Task> implements HistoryManager {
         public Node getTail() {
             return tail;
         }
+
+
     }
 }
+
+

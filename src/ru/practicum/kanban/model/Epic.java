@@ -1,4 +1,4 @@
-package ru.yandex_practicum;
+package ru.practicum.kanban.model;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.yandex_practicum;
+package ru.practicum.kanban.model;
 
 public class Task {
 

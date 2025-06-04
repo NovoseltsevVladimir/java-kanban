@@ -1,6 +1,10 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.yandex_practicum.*;
+import ru.practicum.kanban.manager.InMemoryTaskManager;
+import ru.practicum.kanban.model.Epic;
+import ru.practicum.kanban.model.Status;
+import ru.practicum.kanban.model.Subtask;
+import ru.practicum.kanban.model.Task;
 
 import java.util.List;
 

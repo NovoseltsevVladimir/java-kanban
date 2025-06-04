@@ -1,5 +1,11 @@
-import ru.yandex_practicum.*;
-import ru.yandex_practicum.Task;
+package ru.practicum.kanban;
+
+import ru.practicum.kanban.manager.Managers;
+import ru.practicum.kanban.manager.TaskManager;
+import ru.practicum.kanban.model.Epic;
+import ru.practicum.kanban.model.Status;
+import ru.practicum.kanban.model.Subtask;
+import ru.practicum.kanban.model.Task;
 
 import java.util.List;
 
@@ -7,12 +13,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-        InMemoryTaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefault();
         test(taskManager);
         printAllTasks(taskManager);
     }
 
-    private static void printAllTasks(InMemoryTaskManager manager) {
+    private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
         List<Task> tasks = manager.getTasks();
         List<Epic> epics = manager.getEpics();
@@ -43,7 +49,7 @@ public class Main {
         }
     }
 
-    public static void test(InMemoryTaskManager taskManager) {
+    public static void test(TaskManager taskManager) {
 
         Task task1 = new Task("Задача 1", "Сделать задачу 1");
         taskManager.createTask(task1);

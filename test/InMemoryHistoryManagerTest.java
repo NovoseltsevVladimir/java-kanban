@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
-import ru.yandex_practicum.*;
+import ru.practicum.kanban.manager.InMemoryTaskManager;
+import ru.practicum.kanban.model.Task;
 
 import java.util.List;
 
@@ -31,10 +32,9 @@ class InMemoryHistoryManagerTest {
 
         assertEquals(1, history.size(), "Задачи в истории просмотра дублируются");
 
-        InMemoryHistoryManager historyManager = taskManager.getHistoryManager();
-        historyManager.remove(taskId);
-        history = taskManager.getHistory();
-        assertEquals(0, history.size(), "Задача не удаляется");
+       taskManager.removeTaskById(taskId);
+       history = taskManager.getHistory();
+       assertEquals(0, history.size(), "Задача не удаляется из истории");
 
     }
 
