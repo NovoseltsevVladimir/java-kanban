@@ -20,7 +20,6 @@ class InMemoryHistoryManagerTest {
         Task savedTask = taskManager.getTaskById(taskId);
 
         List<Task> history = taskManager.getHistory();
-        System.out.println(history.size());
 
         assertNotNull(history, "История не найдена.");
         assertEquals(1, history.size(), "Задача не добавлена в историю");
