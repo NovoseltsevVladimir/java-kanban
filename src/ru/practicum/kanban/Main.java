@@ -1,5 +1,11 @@
-import ru.yandex_practicum.*;
-import ru.yandex_practicum.Task;
+package ru.practicum.kanban;
+
+import ru.practicum.kanban.manager.Managers;
+import ru.practicum.kanban.manager.TaskManager;
+import ru.practicum.kanban.model.Epic;
+import ru.practicum.kanban.model.Status;
+import ru.practicum.kanban.model.Subtask;
+import ru.practicum.kanban.model.Task;
 
 import java.util.List;
 
@@ -7,16 +13,16 @@ public class Main {
 
     public static void main(String[] args) {
 
-        InMemoryTaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefault();
         test(taskManager);
-        printAllTasks (taskManager);
+        printAllTasks(taskManager);
     }
 
-    private static void printAllTasks(InMemoryTaskManager manager) {
+    private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
-        List <Task> tasks = manager.getTasks();
-        List <Epic> epics = manager.getEpics();
-        List <Subtask> subtasks = manager.getSubtasks();
+        List<Task> tasks = manager.getTasks();
+        List<Epic> epics = manager.getEpics();
+        List<Subtask> subtasks = manager.getSubtasks();
 
         for (Task task : tasks) {
             System.out.println(task);
@@ -25,7 +31,7 @@ public class Main {
         for (Epic epic : epics) {
             System.out.println(epic);
 
-            List<Subtask> subtaskList= manager.getEpicSubtasks((Epic) epic);
+            List<Subtask> subtaskList = manager.getEpicSubtasks((Epic) epic);
             for (Subtask task : subtaskList) {
                 manager.getTaskById(task.getId());
                 System.out.println("--> " + task);
@@ -43,7 +49,7 @@ public class Main {
         }
     }
 
-    public static void test (InMemoryTaskManager taskManager) {
+    public static void test(TaskManager taskManager) {
 
         Task task1 = new Task("Задача 1", "Сделать задачу 1");
         taskManager.createTask(task1);
@@ -53,14 +59,14 @@ public class Main {
         Epic epic1 = new Epic("Эпик 1", "Завершить все подзадачи в эпике 1");
         taskManager.createEpic(epic1);
 
-        Subtask subtask1 = new Subtask("Подзадача 1.1","Решить подзадачу 1.1", epic1.getId());
+        Subtask subtask1 = new Subtask("Подзадача 1.1", "Решить подзадачу 1.1", epic1.getId());
         taskManager.createSubtask(subtask1);
-        Subtask subtask2 = new Subtask("Подзадача 1.2","Решить подзадачу 1.2", epic1.getId());
+        Subtask subtask2 = new Subtask("Подзадача 1.2", "Решить подзадачу 1.2", epic1.getId());
         taskManager.createSubtask(subtask2);
 
         Epic epic2 = new Epic("Эпик 2", "Завершить все подзадачи в эпике 2");
         taskManager.createEpic(epic2);
-        Subtask subtask3 = new Subtask("Подзадача 2.1","Решить подзадачу 2.1",epic2.getId());
+        Subtask subtask3 = new Subtask("Подзадача 2.1", "Решить подзадачу 2.1", epic2.getId());
         taskManager.createSubtask(subtask3);
 
         System.out.println(taskManager.getEpics());
