@@ -1,8 +1,6 @@
-package test;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.yandex_practicum.Managers;
+import ru.practicum.kanban.manager.Managers;
 
 class ManagersTest {
 

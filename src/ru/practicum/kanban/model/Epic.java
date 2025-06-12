@@ -1,4 +1,4 @@
-package ru.yandex_practicum;
+package ru.practicum.kanban.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,16 +15,20 @@ public class Epic extends Task {
         return subtasks;
     }
 
-    public void removeSubtask (Integer id) {
+    public void removeSubtask(Integer id) {
         if (subtasks.contains(id)) {
             subtasks.remove(id);
         }
     }
 
-    public void addSubtask (Integer id) {
+    public void addSubtask(Integer id) {
         if (!subtasks.contains(id)) {
             subtasks.add(id);
         }
+    }
+
+    public void removeAllSubtasks() {
+        subtasks.clear();
     }
 
 }
