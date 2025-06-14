@@ -1,5 +1,9 @@
 package ru.practicum.kanban.model;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Task {
 
     private String name;
@@ -13,6 +17,30 @@ public class Task {
         this.description = description;
         this.status = Status.NEW;
 
+    }
+
+    public Task(String[] taskString) {
+
+        this.id = Integer.parseInt(taskString[0]);
+        this.name = taskString[2];
+        String statusString = taskString[3];
+        if (statusString.equals("DONE")) {
+            this.status = Status.DONE;
+        } else if (statusString.equals("NEW")) {
+            this.status = Status.NEW;
+        } else {
+            this.status = Status.IN_PROGRESS;
+        }
+
+        this.description = taskString[4];
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setId(int id) {
@@ -43,13 +71,21 @@ public class Task {
         this.status = status;
     }
 
+    public TaskTypes getType () {
+        return TaskTypes.TASK;
+    }
+
     @Override
     public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", id=" + id +
-                '}';
+
+        String separator = ",";
+
+        return id + separator
+                + getType() + separator
+                + name + separator
+                + status + separator
+                + description + separator;
     }
+
+
 }

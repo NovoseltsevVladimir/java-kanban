@@ -11,6 +11,10 @@ public class Epic extends Task {
         super(name, description);
     }
 
+    public Epic(String[] taskString) {
+        super(taskString);
+    }
+
     public List<Integer> getSubtasksId() {
         return subtasks;
     }
@@ -29,6 +33,11 @@ public class Epic extends Task {
 
     public void removeAllSubtasks() {
         subtasks.clear();
+    }
+
+    @Override
+    public TaskTypes getType () {
+        return TaskTypes.EPIC;
     }
 
 }
