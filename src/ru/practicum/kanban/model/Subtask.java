@@ -13,7 +13,7 @@ public class Subtask extends Task {
         this.parentId = parentId;
     }
 
-    public Subtask (String[] subtaskString) {
+    public Subtask(String[] subtaskString) {
         super(subtaskString);
         this.parentId = Integer.parseInt(subtaskString[5]);
     }
@@ -25,7 +25,7 @@ public class Subtask extends Task {
     }
 
     @Override
-    public TaskTypes getType () {
+    public TaskTypes getType() {
         return TaskTypes.SUBTASK;
     }
 
