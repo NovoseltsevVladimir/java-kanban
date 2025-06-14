@@ -1,9 +1,5 @@
 package ru.practicum.kanban.model;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
 public class Task {
 
     private String name;
@@ -71,7 +67,7 @@ public class Task {
         this.status = status;
     }
 
-    public TaskTypes getType () {
+    public TaskTypes getType() {
         return TaskTypes.TASK;
     }
 
