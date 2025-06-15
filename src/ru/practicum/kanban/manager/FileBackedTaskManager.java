@@ -3,6 +3,7 @@ package ru.practicum.kanban.manager;
 import ru.practicum.kanban.model.Epic;
 import ru.practicum.kanban.model.Subtask;
 import ru.practicum.kanban.model.Task;
+import ru.practicum.kanban.model.TaskType;
 
 import java.io.*;
 
@@ -127,9 +128,44 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public static FileBackedTaskManager loadFromFile(String fileName) {
 
         FileBackedTaskManager taskManager = new FileBackedTaskManager();
-        taskManager = (FileBackedTaskManager) CSVTaskConverter.restoreManagerFromFile(taskManager, fileName);
+        try (Reader filereader = new FileReader(fileName); BufferedReader fileReader = new BufferedReader(filereader)) {
+            boolean firstLine = true;
+            int maxId = 0;
+
+            while (fileReader.ready()) {
+                if (firstLine) {
+                    fileReader.readLine();
+                    firstLine = false;
+                    continue;
+                }
+
+                String line = fileReader.readLine();
+                String[] taskString = line.split(",");
+                int currentId = Integer.parseInt(taskString[0]);
+                maxId = Integer.max(maxId, currentId);
+
+                TaskType taskType = TaskType.valueOf(taskString[1]);
+                Task taskFromString = CSVTaskConverter.fromStringToTask(taskString);
+
+                if (taskType == TaskType.TASK) {
+                    taskManager.tasks.put(currentId, taskFromString);
+                } else if (taskType == TaskType.EPIC) {
+                    taskManager.epics.put(currentId, (Epic) taskFromString);
+                } else {
+                    taskManager.subtasks.put(currentId, (Subtask) taskFromString);
+                }
+
+                taskManager.lastId = maxId;
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return taskManager;
+
     }
 }
 

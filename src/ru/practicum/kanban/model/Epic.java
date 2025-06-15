@@ -11,10 +11,6 @@ public class Epic extends Task {
         super(name, description);
     }
 
-    public Epic(String[] taskString) {
-        super(taskString);
-    }
-
     public List<Integer> getSubtasksId() {
         return subtasks;
     }

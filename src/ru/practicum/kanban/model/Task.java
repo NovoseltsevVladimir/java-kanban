@@ -15,22 +15,6 @@ public class Task {
 
     }
 
-    public Task(String[] taskString) {
-
-        this.id = Integer.parseInt(taskString[0]);
-        this.name = taskString[2];
-        String statusString = taskString[3];
-        if (statusString.equals("DONE")) {
-            this.status = Status.DONE;
-        } else if (statusString.equals("NEW")) {
-            this.status = Status.NEW;
-        } else {
-            this.status = Status.IN_PROGRESS;
-        }
-
-        this.description = taskString[4];
-    }
-
     public String getName() {
         return name;
     }

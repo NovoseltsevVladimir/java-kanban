@@ -1,11 +1,6 @@
 package ru.practicum.kanban.manager;
 
-import ru.practicum.kanban.model.Epic;
-import ru.practicum.kanban.model.Subtask;
-import ru.practicum.kanban.model.Task;
-import ru.practicum.kanban.model.TaskType;
-
-import java.io.*;
+import ru.practicum.kanban.model.*;
 
 public class CSVTaskConverter {
 
@@ -28,49 +23,25 @@ public class CSVTaskConverter {
 
     }
 
-    public static TaskManager restoreManagerFromFile(FileBackedTaskManager taskManager, String fileName) {
+    public static Task fromStringToTask(String[] taskString) {
 
-        try (Reader filereader = new FileReader(fileName); BufferedReader fileReader = new BufferedReader(filereader)) {
-            boolean firstLine = true;
-            int maxId = 0;
+        TaskType taskType = TaskType.valueOf(taskString[1]);
+        Status status = Status.valueOf(taskString[3]);
+        String name = taskString[2];
+        String description = taskString[4];
 
-            while (fileReader.ready()) {
-                if (firstLine) {
-                    fileReader.readLine();
-                    firstLine = false;
-                    continue;
-                }
-
-                String line = fileReader.readLine();
-                String[] taskString = line.split(",");
-                int currentId = Integer.parseInt(taskString[0]);
-                maxId = Integer.max(maxId, currentId);
-
-                TaskType taskType = TaskType.valueOf(taskString[1]);
-
-                if (taskType == TaskType.TASK) {
-                    Task task = new Task(taskString);
-                    taskManager.tasks.put(currentId, task);
-                } else if (taskType == TaskType.EPIC) {
-                    Epic epic = new Epic(taskString);
-                    taskManager.epics.put(currentId, epic);
-                } else {
-                    Subtask subtask = new Subtask(taskString);
-                    taskManager.subtasks.put(currentId, subtask);
-                }
-
-                taskManager.lastId = maxId;
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        Task task;
+        if (taskType == TaskType.TASK) {
+            task = new Task(name, description);
+        } else if (taskType == TaskType.EPIC) {
+            task = new Epic(name, description);
+        } else {
+            task = new Subtask(name, description, Integer.parseInt(taskString[5]));
         }
 
-        return taskManager;
+        task.setStatus(status);
+        task.setId(Integer.parseInt(taskString[0]));
 
+        return task;
     }
-
-
 }
