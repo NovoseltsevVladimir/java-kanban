@@ -9,7 +9,7 @@ import java.io.*;
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     String fileName = "taskManagerSave.csv";
-    final String FIELDS_DESCRIPRION = "id,type,name,status,description,epic";
+    private final String FIELDS = "id,type,name,status,description,epic";
 
     public FileBackedTaskManager(String fileName) {
         this.fileName = fileName;
@@ -102,7 +102,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String lineBr = System.lineSeparator();
         try (Writer fileWriter = new FileWriter(fileName)) {
 
-            fileWriter.write(FIELDS_DESCRIPRION + lineBr);
+            fileWriter.write(FIELDS + lineBr);
             //обработка и запись задач
             for (Task task : getTasks()) {
                 fileWriter.write(CSVTaskConverter.getTaskDescription(task) + lineBr);
