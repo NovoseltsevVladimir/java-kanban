@@ -67,8 +67,8 @@ public class Task {
         this.status = status;
     }
 
-    public TaskTypes getType() {
-        return TaskTypes.TASK;
+    public TaskType getType() {
+        return TaskType.TASK;
     }
 
     @Override

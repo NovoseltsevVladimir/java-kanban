@@ -100,7 +100,6 @@ class FileBackedTaskManagerTest {
                 int count = 0;
                 while (br.ready()) {
                     String line = br.readLine();
-                    System.out.println(line);
                     count++;
                 }
                 assertEquals(5, count, "В файле " + count + " строк.");

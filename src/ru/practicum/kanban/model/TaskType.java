@@ -1,6 +1,6 @@
 package ru.practicum.kanban.model;
 
-public enum TaskTypes {
+public enum TaskType {
         TASK,
         SUBTASK,
         EPIC

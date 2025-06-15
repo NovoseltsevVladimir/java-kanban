@@ -8,7 +8,8 @@ import java.io.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
-    String fileName = "";
+    String fileName = "taskManagerSave.csv";
+    final String FIELDS_DESCRIPRION = "id,type,name,status,description,epic";
 
     public FileBackedTaskManager(String fileName) {
         this.fileName = fileName;
@@ -96,33 +97,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    private String getFieldsDescription() {
-        return "id,type,name,status,description,epic";
-    }
-
     public void save() {
 
-        String lineBr = "\n";
+        String lineBr = System.lineSeparator();
         try (Writer fileWriter = new FileWriter(fileName)) {
 
-            StringBuilder builder = new StringBuilder();
-            builder.append(getFieldsDescription() + lineBr);
-
+            fileWriter.write(FIELDS_DESCRIPRION + lineBr);
             //обработка и запись задач
             for (Task task : getTasks()) {
-                builder.append(task.toString() + lineBr);
+                fileWriter.write(CSVTaskConverter.getTaskDescription(task) + lineBr);
             }
 
             for (Epic epic : getEpics()) {
-                builder.append(epic.toString() + lineBr);
+                fileWriter.write(CSVTaskConverter.getTaskDescription(epic) + lineBr);
             }
 
             for (Subtask subtask : getSubtasks()) {
-                builder.append(subtask.toString() + lineBr);
+                fileWriter.write(CSVTaskConverter.getTaskDescription(subtask) + lineBr);
             }
-
-            //запись
-            fileWriter.write(builder.toString());
         } catch (IOException exp) {
             try {
                 throw new ManagerSaveException("Не удалось сохранить файл" + exp.getMessage());
@@ -135,55 +127,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public static FileBackedTaskManager loadFromFile(String fileName) {
 
         FileBackedTaskManager taskManager = new FileBackedTaskManager();
-
-        try (Reader filereader = new FileReader(fileName); BufferedReader fileReader = new BufferedReader(filereader)) {
-            boolean firstLine = true;
-            int maxId = 0;
-
-            while (fileReader.ready()) {
-                if (firstLine) {
-                    fileReader.readLine();
-                    firstLine = false;
-                    continue;
-                }
-
-                String line = fileReader.readLine();
-                String[] taskString = line.split(",");
-                String taskType = taskString[1];
-                int currentId = Integer.parseInt(taskString[0]);
-                maxId = Integer.max(maxId, currentId);
-
-                if (taskType.equals("TASK")) {
-                    Task task = new Task(taskString);
-                    taskManager.tasks.put(currentId, task);
-                } else if (taskType.equals("EPIC")) {
-                    Epic epic = new Epic(taskString);
-                    taskManager.epics.put(currentId, epic);
-                } else {
-                    Subtask subtask = new Subtask(taskString);
-                    taskManager.subtasks.put(currentId, subtask);
-                }
-
-                taskManager.lastId = maxId;
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        taskManager = (FileBackedTaskManager) CSVTaskConverter.restoreManagerFromFile(taskManager, fileName);
 
         return taskManager;
-    }
-
-    public static class ManagerSaveException extends IOException {
-
-        public ManagerSaveException() {
-        }
-
-        public ManagerSaveException(String message) {
-            super(message);
-        }
     }
 }
 
