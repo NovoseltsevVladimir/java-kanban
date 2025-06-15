@@ -18,4 +18,15 @@ public class Subtask extends Task {
             super.setStatus(status);
         }
     }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.SUBTASK;
+    }
+
+    @Override
+    public String toString() {
+        String result = super.toString();
+        return result + parentId;
+    }
 }
