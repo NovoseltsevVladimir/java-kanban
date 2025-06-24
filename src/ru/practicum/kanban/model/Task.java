@@ -15,6 +15,14 @@ public class Task {
 
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -43,13 +51,21 @@ public class Task {
         this.status = status;
     }
 
+    public TaskType getType() {
+        return TaskType.TASK;
+    }
+
     @Override
     public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", id=" + id +
-                '}';
+
+        String separator = ",";
+
+        return id + separator
+                + getType() + separator
+                + name + separator
+                + status + separator
+                + description + separator;
     }
+
+
 }
