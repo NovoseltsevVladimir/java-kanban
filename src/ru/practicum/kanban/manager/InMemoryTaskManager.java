@@ -185,21 +185,21 @@ public class InMemoryTaskManager implements TaskManager {
                 .sorted(new StatusComparator())
                 .collect(Collectors.toList());
 
-        Status NewStatus = Status.NEW;
+        Status newStatus = Status.NEW;
 
         int sizeList = statusesList.size();
 
         if (sizeList == 1) {
-            NewStatus = statusesList.get(0);
+            newStatus = statusesList.get(0);
         } else if (sizeList > 1) {
             if (statusesList.getFirst() == statusesList.getLast()) {
-                NewStatus = statusesList.getFirst();
+                newStatus = statusesList.getFirst();
             } else if (statusesList.getFirst() != Status.DONE) {
-                NewStatus = Status.IN_PROGRESS;
+                newStatus = Status.IN_PROGRESS;
             }
         }
 
-        epic.setStatus(NewStatus);
+        epic.setStatus(newStatus);
         countEpicTime(epic);
     }
 
