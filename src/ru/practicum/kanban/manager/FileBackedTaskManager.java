@@ -9,8 +9,12 @@ import java.io.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
-    private static final String FIELDS_DESCRIPTION = "id,type,name,status,description,epic";
-    String fileName = "taskManagerSave.csv";
+    private static final String FIELDS_DESCRIPTION = "id,type,name,status,description,epic,startTime,duration,endTime";
+    private String fileName = "taskManagerSave.csv";
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public FileBackedTaskManager(String fileName) {
         this.fileName = fileName;
@@ -99,11 +103,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public void save() {
+        try {
+            saveWithException();
+        } catch (ManagerSaveException expection) {
+            System.out.println(expection.getMessage());
+        }
+        ;
+    }
+
+    public void saveWithException() throws ManagerSaveException {
 
         String lineBr = System.lineSeparator();
         try (Writer fileWriter = new FileWriter(fileName)) {
 
-            fileWriter.write(FIELDS_DESCRIPTION + lineBr);
+            fileWriter.write(FileBackedTaskManager.FIELDS_DESCRIPTION + lineBr);
             //обработка и запись задач
             for (Task task : getTasks()) {
                 fileWriter.write(CSVTaskConverter.getTaskDescription(task) + lineBr);
@@ -117,13 +130,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 fileWriter.write(CSVTaskConverter.getTaskDescription(subtask) + lineBr);
             }
         } catch (IOException exp) {
-            try {
-                throw new ManagerSaveException("Не удалось сохранить файл" + exp.getMessage());
-            } catch (ManagerSaveException expection) {
-                System.out.println(expection.getMessage());
-            }
+            throw new ManagerSaveException("Не удалось сохранить файл" + exp.getMessage());
         }
     }
+
 
     public static FileBackedTaskManager loadFromFile(String fileName) {
 

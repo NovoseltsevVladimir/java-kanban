@@ -4,7 +4,9 @@ import ru.practicum.kanban.model.Epic;
 import ru.practicum.kanban.model.Subtask;
 import ru.practicum.kanban.model.Task;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface TaskManager<T extends Task> {
 
@@ -52,4 +54,38 @@ public interface TaskManager<T extends Task> {
 
     void removeTasks();
 
+    List<Task> getPrioritizedTasks();
+
+    static boolean areTwoTasksHaveCrossing(Task task1, Task task2) {
+        LocalDateTime startTime1 = task1.getStartTime();
+        LocalDateTime endTime1 = task1.getEndTime();
+
+        LocalDateTime startTime2 = task2.getStartTime();
+        LocalDateTime endTime2 = task2.getEndTime();
+
+        boolean result = startTime1.equals(startTime2)
+                || startTime1.isBefore(endTime2) && startTime1.isAfter(startTime2)
+                || startTime2.isBefore(endTime1) && startTime2.isAfter(startTime1);
+
+        return result;
+    }
+
+    static boolean isTaskHasCrossingInCollection(Task task, Map<Integer, Task> taskCollection) {
+
+        boolean result = false;
+
+        if (taskCollection.get(task.getId()) != null) {
+            return result;
+        }
+
+        for (Task taskInCollection : taskCollection.values()) {
+            if (areTwoTasksHaveCrossing(task, taskInCollection)) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+
+    }
 }

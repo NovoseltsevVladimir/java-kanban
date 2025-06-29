@@ -24,9 +24,4 @@ public class Subtask extends Task {
         return TaskType.SUBTASK;
     }
 
-    @Override
-    public String toString() {
-        String result = super.toString();
-        return result + parentId;
-    }
 }

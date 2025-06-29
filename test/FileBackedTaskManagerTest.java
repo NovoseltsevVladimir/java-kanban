@@ -1,5 +1,8 @@
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.practicum.kanban.manager.FileBackedTaskManager;
+import ru.practicum.kanban.manager.ManagerSaveException;
+import ru.practicum.kanban.manager.TaskManager;
 import ru.practicum.kanban.model.Epic;
 import ru.practicum.kanban.model.Subtask;
 import ru.practicum.kanban.model.Task;
@@ -7,39 +10,16 @@ import ru.practicum.kanban.model.Task;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest {
 
-    @Test
-    void addAndRemoveAndGetHistory() {
-        FileBackedTaskManager taskManager = new FileBackedTaskManager();
-
-        Task task = new Task("Задача 1", "Сделать задачу 1");
-        taskManager.createTask(task);
-        Integer taskId = task.getId();
-
-        Task savedTask = taskManager.getTaskById(taskId);
-
-        List<Task> history = taskManager.getHistory();
-
-        assertNotNull(history, "История не найдена.");
-        assertEquals(1, history.size(), "Задача не добавлена в историю");
-        assertEquals(savedTask, history.get(0), "Задача не добавлена в историю");
-
-        for (int i = 0; i < 3; i++) {
-            taskManager.getTaskById(taskId);
-        }
-
-        assertEquals(1, history.size(), "Задачи в истории просмотра дублируются");
-
-        taskManager.removeTaskById(taskId);
-        history = taskManager.getHistory();
-        assertEquals(0, history.size(), "Задача не удаляется из истории");
-
+    public FileBackedTaskManagerTest() {
+        taskManager = new FileBackedTaskManager();
     }
 
     @Test
@@ -87,13 +67,31 @@ class FileBackedTaskManagerTest {
             FileBackedTaskManager taskManager = new FileBackedTaskManager(fileName);
 
             Task task = new Task("Задача 1", "Сделать задачу 1");
+            task.setStartTime(LocalDateTime.now());
+            task.setDuration(Duration.ofMinutes(60));
             taskManager.createTask(task);
+
             Epic epic = new Epic("Эпик", "Сделать задачу 2");
+            epic.setStartTime(LocalDateTime.now().minusHours(3));
+            epic.setDuration(Duration.ofMinutes(480));
             taskManager.createEpic(epic);
+
             Subtask subtask1 = new Subtask("Подзадача", "Сделать задачу 3", epic.getId());
+            subtask1.setStartTime(LocalDateTime.now().minusHours(1));
+            subtask1.setDuration(Duration.ofMinutes(30));
             taskManager.createSubtask(subtask1);
+
             Subtask subtask2 = new Subtask("Подзадача", "Сделать задачу 3", epic.getId());
+            subtask2.setStartTime(LocalDateTime.now().minusHours(2));
+            subtask2.setDuration(Duration.ofMinutes(45));
             taskManager.createSubtask(subtask2);
+
+            List taskList = taskManager.getPrioritizedTasks();
+            assertEquals(4, taskList.size(), "После сортировки не хватает задач");
+            assertEquals(epic, taskList.get(0), "Сортировка работает неправильно");
+
+            boolean tasksCrossing = TaskManager.areTwoTasksHaveCrossing(subtask1, subtask2);
+            assertEquals(false, tasksCrossing, "Сравнение пересечений не работает");
 
             taskManager.save();
             try (Reader filereader = new FileReader(fileName); BufferedReader br = new BufferedReader(filereader)) {
@@ -117,5 +115,20 @@ class FileBackedTaskManagerTest {
             assertEquals(2, newManager.getSubtasks().size(), "Subtasks - не загружено");
         }
     }
+
+    @Test
+    public void testException() {
+        FileBackedTaskManager taskManager = new FileBackedTaskManager();
+        assertThrows(ManagerSaveException.class, () -> {
+            taskManager.setFileName("");
+            taskManager.saveWithException();
+        }, "Выгрузка при некорректном имени файла работает без исключения");
+
+        taskManager.setFileName("testExport");
+        Assertions.assertDoesNotThrow(() -> {
+            taskManager.saveWithException();
+        }, "Выгрузка при корректном имени файла работает с исключением");
+    }
+
 
 }
