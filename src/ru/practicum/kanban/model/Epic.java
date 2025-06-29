@@ -1,8 +1,5 @@
 package ru.practicum.kanban.model;
 
-import ru.practicum.kanban.manager.InMemoryTaskManager;
-
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

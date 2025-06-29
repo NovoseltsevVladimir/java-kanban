@@ -1,5 +1,4 @@
 import org.junit.jupiter.api.Assertions;
-import ru.practicum.kanban.manager.InMemoryTaskManager;
 import ru.practicum.kanban.manager.TaskManager;
 import org.junit.jupiter.api.Test;
 import ru.practicum.kanban.model.Epic;
