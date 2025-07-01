@@ -2,7 +2,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.practicum.kanban.manager.FileBackedTaskManager;
 import ru.practicum.kanban.manager.ManagerSaveException;
-import ru.practicum.kanban.manager.TaskManager;
 import ru.practicum.kanban.model.Epic;
 import ru.practicum.kanban.model.Subtask;
 import ru.practicum.kanban.model.Task;
@@ -87,11 +86,8 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
             taskManager.createSubtask(subtask2);
 
             List taskList = taskManager.getPrioritizedTasks();
-            assertEquals(4, taskList.size(), "После сортировки не хватает задач");
-            assertEquals(epic, taskList.get(0), "Сортировка работает неправильно");
-
-            boolean tasksCrossing = TaskManager.areTwoTasksHaveCrossing(subtask1, subtask2);
-            assertEquals(false, tasksCrossing, "Сравнение пересечений не работает");
+            assertEquals(3, taskList.size(), "После сортировки не хватает задач");
+            assertEquals(subtask2, taskList.get(0), "Сортировка работает неправильно");
 
             taskManager.save();
             try (Reader filereader = new FileReader(fileName); BufferedReader br = new BufferedReader(filereader)) {

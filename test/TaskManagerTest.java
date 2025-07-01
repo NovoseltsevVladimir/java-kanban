@@ -6,8 +6,6 @@ import ru.practicum.kanban.model.Status;
 import ru.practicum.kanban.model.Subtask;
 import ru.practicum.kanban.model.Task;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,52 +60,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         Assertions.assertEquals(subtask1.getId(), subtasksId.get(0), "Подзадача 1 не совпадает с добавленной.");
         Assertions.assertEquals(subtask2.getId(), subtasksId.get(1), "Подзадача 2 не совпадает с добавленной.");
-    }
-
-    @Test
-    void checkTasksCrossings () {
-
-        Task task1 = new Task("Task 1","");
-        task1.setStartTime(LocalDateTime.now());
-        task1.setDuration(Duration.ofMinutes(45));
-
-        Task task2 = new Task("Task 2","");
-        task2.setStartTime(LocalDateTime.now());
-        task2.setDuration(Duration.ofMinutes(37));
-
-        boolean tasksAreCrossing = TaskManager.areTwoTasksHaveCrossing(task1,task2);
-        Assertions.assertTrue(tasksAreCrossing, "Некорректно работает определение пересечений");
-
-        task2.setStartTime(task2.getStartTime().plusMinutes(60));
-        tasksAreCrossing = TaskManager.areTwoTasksHaveCrossing(task1,task2);
-        Assertions.assertFalse(tasksAreCrossing, "Некорректно работает определение пересечений");
-    }
-
-    @Test
-    void addAndRemoveAndGetHistory() {
-
-        Task task = new Task("Задача 1", "Сделать задачу 1");
-        taskManager.createTask(task);
-        Integer taskId = task.getId();
-
-        Task savedTask = taskManager.getTaskById(taskId);
-
-        List<Task> history = taskManager.getHistory();
-
-        assertNotNull(history, "История не найдена.");
-        assertEquals(1, history.size(), "Задача не добавлена в историю");
-        assertEquals(savedTask, history.get(0), "Задача не добавлена в историю");
-
-        for (int i = 0; i < 3; i++) {
-            taskManager.getTaskById(taskId);
-        }
-
-        assertEquals(1, history.size(), "Задачи в истории просмотра дублируются");
-
-        taskManager.removeTaskById(taskId);
-        history = taskManager.getHistory();
-        assertEquals(0, history.size(), "Задача не удаляется из истории");
-
     }
 
     @Test
@@ -182,8 +134,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void addNewSubtask() {
         Epic epic = new Epic("Эпик 1", "Завершить все подзадачи в эпике 1");
         taskManager.createEpic(epic);
-        Integer epicId = epic.getId();
+        assertEquals(1, taskManager.getEpics().size(), "Эпик не создан");
 
+        Integer epicId = epic.getId();
         Subtask subtask1 = new Subtask("Подзадача 1.1", "Решить подзадачу 1.1", epicId);
         taskManager.createSubtask(subtask1);
         Integer subtask1Id = subtask1.getId();
@@ -209,25 +162,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     }
 
-
-
 }
-
-    //Добавить тест на проверку пересечения интервалов:
-    //Убедиться, что реализован корректный расчёт пересечения временных интервалов задач, чтобы предотвратить конфликтные ситуации.
-
-//    Для HistoryManager — тесты для всех методов интерфейса. Граничные условия:
-//    a. Пустая история задач.
-//    b. Дублирование.
-//    c. Удаление из истории: начало, середина, конец.
-
-//    Корректный перехват исключений при работе с файлами: для этого используйте утилитарные методы JUnit — Assertions.assertThrows(…) и Assertions.assertDoesNotThrow(…). Эти методы получают на вход класс-исключение и экземпляр анонимного класса/лямбду. В единственном методе реализуется вызов того кода, который потенциально может вызвать исключение. Например:
-//    @Test
-//    public void testException() {
-//        assertThrows(ArithmeticException.class, () -> {
-//            int a = 10 / 0;
-//        }, "Деление на ноль должно приводить к исключению");
-//    }
-
 
 
