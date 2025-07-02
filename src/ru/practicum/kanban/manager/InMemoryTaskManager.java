@@ -55,9 +55,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void createEpic(Epic newEpic) {
 
-        if (taskHasCrossings(newEpic)) {
-            return;
-        }
         int id = getNewId();
         newEpic.setId(id);
         epics.put(id, newEpic);
@@ -67,7 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void createSubtask(Subtask newSubtask) {
 
         int parentId = newSubtask.getParentId();
-        Epic parent = getEpicById(parentId);
+        Epic parent = epics.get(parentId);
         if (parent == null) {
             return;
         }
@@ -307,28 +304,7 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
-    private boolean taskHasCrossings(Task task) {
-
-        TaskType taskType = task.getType();
-        boolean result = false;
-
-        switch (taskType) {
-            case TaskType.EPIC: {
-                result = InMemoryTaskManager.isTaskHasCrossingInCollection(task, epics);
-                break;
-            }
-            case TaskType.SUBTASK: {
-                result = InMemoryTaskManager.isTaskHasCrossingInCollection(task, subtasks);
-                break;
-            }
-            default:
-                result = InMemoryTaskManager.isTaskHasCrossingInCollection(task, tasks);
-        }
-
-        return result;
-    }
-
-    public void countEpicTime(Epic epic) {
+    private void countEpicTime(Epic epic) {
 
         List<Integer> subtasksId = epic.getSubtasksId();
 
@@ -367,30 +343,33 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public static boolean areTwoTasksHaveCrossing(Task task1, Task task2) {
+    private boolean areTwoTasksHaveCrossing(Task task1, Task task2) {
         LocalDateTime startTime1 = task1.getStartTime();
         LocalDateTime endTime1 = task1.getEndTime();
 
         LocalDateTime startTime2 = task2.getStartTime();
         LocalDateTime endTime2 = task2.getEndTime();
 
-        boolean result = startTime1.equals(startTime2)
+        boolean result = startTime1.isEqual(startTime2)
                 || startTime1.isBefore(endTime2) && startTime1.isAfter(startTime2)
                 || startTime2.isBefore(endTime1) && startTime2.isAfter(startTime1);
 
         return result;
     }
 
-    public static <T extends Task> boolean isTaskHasCrossingInCollection(Task task, Map<Integer, T> taskCollection) {
+    private <T extends Task> boolean taskHasCrossings(T task) {
 
         boolean result = false;
 
-        if (taskCollection.get(task.getId()) != null
-                || task.getStartTime() == null) {
+        if (task.getStartTime() == null) {
             return result;
         }
 
-        for (Task taskInCollection : taskCollection.values()) {
+        for (Task taskInCollection : sortedTasks) {
+            if (taskInCollection.equals(task)) {
+                continue;
+            }
+
             if (areTwoTasksHaveCrossing(task, taskInCollection)) {
                 result = true;
                 break;
