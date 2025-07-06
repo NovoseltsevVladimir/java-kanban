@@ -52,4 +52,6 @@ public interface TaskManager<T extends Task> {
 
     void removeTasks();
 
+    List<Task> getPrioritizedTasks();
+
 }

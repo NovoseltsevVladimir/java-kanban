@@ -34,7 +34,5 @@ class InMemoryHistoryManagerTest {
         taskManager.removeTaskById(taskId);
         history = taskManager.getHistory();
         assertEquals(0, history.size(), "Задача не удаляется из истории");
-
     }
-
 }
