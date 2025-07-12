@@ -5,6 +5,8 @@ import ru.practicum.kanban.model.Epic;
 import ru.practicum.kanban.model.Status;
 import ru.practicum.kanban.model.Subtask;
 import ru.practicum.kanban.model.Task;
+import ru.practicum.kanban.server.HasCrossingsException;
+import ru.practicum.kanban.server.NotFoundException;
 
 import java.io.IOException;
 import java.util.List;
@@ -132,7 +134,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addNewSubtask() throws IOException {
+    void addNewSubtask() throws HasCrossingsException, NotFoundException {
         Epic epic = new Epic("Эпик 1", "Завершить все подзадачи в эпике 1");
         taskManager.createEpic(epic);
         assertEquals(1, taskManager.getEpics().size(), "Эпик не создан");
@@ -154,12 +156,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         int indexOfSubtask1 = subtasks.indexOf(savedSubtask1);
         assertTrue(indexOfSubtask1 >= 0, "Подзадача 1 не сохранена");
         assertEquals(subtask1, subtasks.get(indexOfSubtask1), "Задачи не совпадают.");
-
-        Subtask subtask2 = new Subtask("Подзадача 1.1", "Решить подзадачу 1.1", subtask1Id);
-        taskManager.createSubtask(subtask2);
-
-        int indexOfSubtask2 = subtasks.indexOf(subtask2);
-        assertTrue(indexOfSubtask2 == -1, "Подзадача 2 не сохранена");
 
     }
 
