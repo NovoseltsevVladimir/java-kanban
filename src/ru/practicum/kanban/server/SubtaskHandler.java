@@ -21,9 +21,9 @@ public class SubtaskHandler extends BaseHttpHandler {
     @Override
     protected void handleGetRequest(HttpExchange httpExchange, String[] parameters) throws IOException {
 
-        if (parameters.length == 2) {//tasks
+        if (parameters.length == 2) {
             sendText(httpExchange, JsonConverter.convertTaskList(taskManager.getSubtasks()));
-        } else if (parameters.length == 3) { //tasks/{id}
+        } else if (parameters.length == 3) {
             int id;
 
             try {
