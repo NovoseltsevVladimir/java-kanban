@@ -6,6 +6,7 @@ import ru.practicum.kanban.model.Status;
 import ru.practicum.kanban.model.Subtask;
 import ru.practicum.kanban.model.Task;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +17,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     protected TaskManager taskManager;
 
     @Test
-    public void addSubtaskAndCheckEpic() {
+    public void addSubtaskAndCheckEpic() throws IOException {
 
         Epic epic = new Epic("Эпик 1", "Завершить все подзадачи в эпике 1");
         taskManager.createEpic(epic);
@@ -63,7 +64,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addNewTask() {
+    void addNewTask() throws IOException {
         Task task = new Task("Задача 1", "Сделать задачу 1");
         taskManager.createTask(task);
         Integer taskId = task.getId();
@@ -82,7 +83,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addNewEpic() {
+    void addNewEpic() throws IOException {
         Epic epic = new Epic("Эпик 1", "Завершить все подзадачи в эпике 1");
         taskManager.createEpic(epic);
         Integer epicId = epic.getId();
@@ -131,7 +132,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addNewSubtask() {
+    void addNewSubtask() throws IOException {
         Epic epic = new Epic("Эпик 1", "Завершить все подзадачи в эпике 1");
         taskManager.createEpic(epic);
         assertEquals(1, taskManager.getEpics().size(), "Эпик не создан");

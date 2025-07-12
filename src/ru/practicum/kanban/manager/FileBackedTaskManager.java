@@ -4,6 +4,8 @@ import ru.practicum.kanban.model.Epic;
 import ru.practicum.kanban.model.Subtask;
 import ru.practicum.kanban.model.Task;
 import ru.practicum.kanban.model.TaskType;
+import ru.practicum.kanban.server.HasCrossingsException;
+import ru.practicum.kanban.server.NotFoundException;
 
 import java.io.*;
 
@@ -25,7 +27,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createTask(Task newTask) {
+    public void createTask(Task newTask) throws HasCrossingsException {
         super.createTask(newTask);
         save();
     }
@@ -37,7 +39,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createSubtask(Subtask newSubtask) {
+    public void createSubtask(Subtask newSubtask) throws HasCrossingsException, NotFoundException {
         super.createSubtask(newSubtask);
         save();
     }
@@ -85,19 +87,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task newTask) {
+    public void updateTask(Task newTask) throws HasCrossingsException, NotFoundException {
         super.updateTask(newTask);
         save();
     }
 
     @Override
-    public void updateEpic(Epic newEpic) {
+    public void updateEpic(Epic newEpic) throws NotFoundException {
         super.updateEpic(newEpic);
         save();
     }
 
     @Override
-    public void updateSubtask(Subtask newSubtask) {
+    public void updateSubtask(Subtask newSubtask) throws HasCrossingsException, NotFoundException {
         super.updateSubtask(newSubtask);
         save();
     }

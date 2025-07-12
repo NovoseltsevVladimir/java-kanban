@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 import ru.practicum.kanban.manager.InMemoryTaskManager;
 import ru.practicum.kanban.model.Task;
+import ru.practicum.kanban.server.HasCrossingsException;
 
 import java.util.List;
 
@@ -14,7 +15,11 @@ class InMemoryHistoryManagerTest {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
         Task task = new Task("Задача 1", "Сделать задачу 1");
-        taskManager.createTask(task);
+        try {
+            taskManager.createTask(task);
+        } catch (HasCrossingsException e) {
+            assertEquals(0, 1, "Задача не добавлена. Она имеет пересечения");
+        }
         Integer taskId = task.getId();
 
         Task savedTask = taskManager.getTaskById(taskId);
