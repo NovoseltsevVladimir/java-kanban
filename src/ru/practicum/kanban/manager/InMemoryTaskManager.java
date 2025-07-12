@@ -240,7 +240,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task newTask) throws HasCrossingsException, NotFoundException{
+    public void updateTask(Task newTask) throws HasCrossingsException, NotFoundException {
 
         if (taskHasCrossings(newTask)) {
             throw new HasCrossingsException();
