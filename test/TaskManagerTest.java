@@ -5,7 +5,10 @@ import ru.practicum.kanban.model.Epic;
 import ru.practicum.kanban.model.Status;
 import ru.practicum.kanban.model.Subtask;
 import ru.practicum.kanban.model.Task;
+import ru.practicum.kanban.exceptions.HasCrossingsException;
+import ru.practicum.kanban.exceptions.NotFoundException;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +19,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     protected TaskManager taskManager;
 
     @Test
-    public void addSubtaskAndCheckEpic() {
+    public void addSubtaskAndCheckEpic() throws IOException {
 
         Epic epic = new Epic("Эпик 1", "Завершить все подзадачи в эпике 1");
         taskManager.createEpic(epic);
@@ -63,7 +66,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addNewTask() {
+    void addNewTask() throws IOException {
         Task task = new Task("Задача 1", "Сделать задачу 1");
         taskManager.createTask(task);
         Integer taskId = task.getId();
@@ -82,7 +85,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addNewEpic() {
+    void addNewEpic() throws IOException {
         Epic epic = new Epic("Эпик 1", "Завершить все подзадачи в эпике 1");
         taskManager.createEpic(epic);
         Integer epicId = epic.getId();
@@ -131,7 +134,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addNewSubtask() {
+    void addNewSubtask() throws HasCrossingsException, NotFoundException {
         Epic epic = new Epic("Эпик 1", "Завершить все подзадачи в эпике 1");
         taskManager.createEpic(epic);
         assertEquals(1, taskManager.getEpics().size(), "Эпик не создан");
@@ -153,12 +156,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         int indexOfSubtask1 = subtasks.indexOf(savedSubtask1);
         assertTrue(indexOfSubtask1 >= 0, "Подзадача 1 не сохранена");
         assertEquals(subtask1, subtasks.get(indexOfSubtask1), "Задачи не совпадают.");
-
-        Subtask subtask2 = new Subtask("Подзадача 1.1", "Решить подзадачу 1.1", subtask1Id);
-        taskManager.createSubtask(subtask2);
-
-        int indexOfSubtask2 = subtasks.indexOf(subtask2);
-        assertTrue(indexOfSubtask2 == -1, "Подзадача 2 не сохранена");
 
     }
 

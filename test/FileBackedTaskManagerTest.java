@@ -1,10 +1,12 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.practicum.kanban.manager.FileBackedTaskManager;
-import ru.practicum.kanban.manager.ManagerSaveException;
+import ru.practicum.kanban.exceptions.ManagerSaveException;
 import ru.practicum.kanban.model.Epic;
 import ru.practicum.kanban.model.Subtask;
 import ru.practicum.kanban.model.Task;
+import ru.practicum.kanban.exceptions.HasCrossingsException;
+import ru.practicum.kanban.exceptions.NotFoundException;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -68,7 +70,12 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
             Task task = new Task("Задача 1", "Сделать задачу 1");
             task.setStartTime(LocalDateTime.now());
             task.setDuration(Duration.ofMinutes(60));
-            taskManager.createTask(task);
+
+            try {
+                taskManager.createTask(task);
+            } catch (HasCrossingsException e) {
+                assertEquals(0, 1, "Не удалось добавить задачу. Она пересекается с другими");
+            }
 
             Epic epic = new Epic("Эпик", "Сделать задачу 2");
             epic.setStartTime(LocalDateTime.now().minusHours(3));
@@ -78,12 +85,24 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
             Subtask subtask1 = new Subtask("Подзадача", "Сделать задачу 3", epic.getId());
             subtask1.setStartTime(LocalDateTime.now().minusHours(1));
             subtask1.setDuration(Duration.ofMinutes(30));
-            taskManager.createSubtask(subtask1);
+            try {
+                taskManager.createSubtask(subtask1);
+            } catch (HasCrossingsException e) {
+                assertEquals(0, 1, "Не удалось добавить подзадачу. Она пересекается с другими");
+            } catch (NotFoundException e) {
+                assertEquals(0, 1, "Не удалось найти эпик для подзадачи 1");
+            }
 
             Subtask subtask2 = new Subtask("Подзадача", "Сделать задачу 3", epic.getId());
             subtask2.setStartTime(LocalDateTime.now().minusHours(2));
             subtask2.setDuration(Duration.ofMinutes(45));
-            taskManager.createSubtask(subtask2);
+            try {
+                taskManager.createSubtask(subtask2);
+            } catch (HasCrossingsException e) {
+                assertEquals(0, 1, "Не удалось добавить подзадачу. Она пересекается с другими");
+            } catch (NotFoundException e) {
+                assertEquals(0, 1, "Не удалось найти эпик для подзадачи 2");
+            }
 
             List taskList = taskManager.getPrioritizedTasks();
             assertEquals(3, taskList.size(), "После сортировки не хватает задач");

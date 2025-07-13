@@ -1,6 +1,8 @@
 package ru.practicum.kanban.manager;
 
 import ru.practicum.kanban.model.*;
+import ru.practicum.kanban.exceptions.HasCrossingsException;
+import ru.practicum.kanban.exceptions.NotFoundException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -41,11 +43,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createTask(Task newTask) {
+    public void createTask(Task newTask) throws HasCrossingsException {
 
         if (taskHasCrossings(newTask)) {
-            return;
+            throw new HasCrossingsException();
         }
+
         int id = getNewId();
         newTask.setId(id);
         tasks.put(id, newTask);
@@ -61,16 +64,16 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createSubtask(Subtask newSubtask) {
+    public void createSubtask(Subtask newSubtask) throws HasCrossingsException, NotFoundException {
 
         int parentId = newSubtask.getParentId();
         Epic parent = epics.get(parentId);
         if (parent == null) {
-            return;
+            throw new NotFoundException();
         }
 
         if (taskHasCrossings(newSubtask)) {
-            return;
+            throw new HasCrossingsException();
         }
 
         int id = getNewId();
@@ -237,51 +240,47 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task newTask) {
+    public void updateTask(Task newTask) throws HasCrossingsException, NotFoundException {
 
         if (taskHasCrossings(newTask)) {
-            return;
+            throw new HasCrossingsException();
         }
 
         int id = newTask.getId();
         Task oldTask = tasks.get(id);
         if (oldTask == null) {
             System.out.println("Задачи с таким идентификатором не существует");
-            return;
+            throw new NotFoundException();
         }
 
         tasks.put(id, newTask);
     }
 
     @Override
-    public void updateEpic(Epic newEpic) {
-
-        if (taskHasCrossings(newEpic)) {
-            return;
-        }
+    public void updateEpic(Epic newEpic) throws NotFoundException {
 
         int id = newEpic.getId();
         Epic oldEpic = epics.get(id);
         if (oldEpic == null) {
             System.out.println("Эпика с таким идентификатором не существует");
-            return;
+            throw new NotFoundException();
         }
 
         epics.put(id, newEpic);
     }
 
     @Override
-    public void updateSubtask(Subtask newSubtask) {
+    public void updateSubtask(Subtask newSubtask) throws HasCrossingsException, NotFoundException {
 
         if (taskHasCrossings(newSubtask)) {
-            return;
+            throw new HasCrossingsException();
         }
 
         int id = newSubtask.getId();
         Subtask oldSubtask = subtasks.get(id);
         if (oldSubtask == null) {
             System.out.println("Подзадачи с таким идентификатором не существует");
-            return;
+            throw new NotFoundException();
         }
 
         subtasks.put(id, newSubtask);

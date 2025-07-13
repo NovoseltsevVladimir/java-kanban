@@ -3,6 +3,8 @@ package ru.practicum.kanban.manager;
 import ru.practicum.kanban.model.Epic;
 import ru.practicum.kanban.model.Subtask;
 import ru.practicum.kanban.model.Task;
+import ru.practicum.kanban.exceptions.HasCrossingsException;
+import ru.practicum.kanban.exceptions.NotFoundException;
 
 import java.util.List;
 
@@ -20,11 +22,11 @@ public interface TaskManager<T extends Task> {
 
     List<T> getHistory();
 
-    void createTask(Task newTask);
+    void createTask(Task newTask) throws HasCrossingsException;
 
     void createEpic(Epic newEpic);
 
-    void createSubtask(Subtask newSubtask);
+    void createSubtask(Subtask newSubtask) throws HasCrossingsException, NotFoundException;
 
     Task getTaskById(int id);
 
@@ -32,11 +34,11 @@ public interface TaskManager<T extends Task> {
 
     Epic getEpicById(int id);
 
-    void updateTask(Task newTask);
+    void updateTask(Task newTask) throws HasCrossingsException, NotFoundException;
 
-    void updateSubtask(Subtask newSubtask);
+    void updateSubtask(Subtask newSubtask) throws HasCrossingsException, NotFoundException;
 
-    void updateEpic(Epic newEpic);
+    void updateEpic(Epic newEpic) throws NotFoundException;
 
     void removeTaskById(int id);
 
