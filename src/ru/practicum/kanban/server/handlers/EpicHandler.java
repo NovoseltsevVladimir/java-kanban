@@ -1,46 +1,47 @@
-package ru.practicum.kanban.server;
+package ru.practicum.kanban.server.handlers;
 
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import ru.practicum.kanban.manager.TaskManager;
-import ru.practicum.kanban.model.Subtask;
-import ru.practicum.kanban.model.Task;
+import ru.practicum.kanban.model.Epic;
+import ru.practicum.kanban.exceptions.HasCrossingsException;
+import ru.practicum.kanban.server.JsonConverter;
+import ru.practicum.kanban.exceptions.NotFoundException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class SubtaskHandler extends BaseHttpHandler {
+public class EpicHandler extends BaseHttpHandler {
 
     private TaskManager taskManager;
 
-    public SubtaskHandler(TaskManager taskManager) {
+    public EpicHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
+        ;
     }
 
     @Override
     protected void handleGetRequest(HttpExchange httpExchange, String[] parameters) throws IOException {
 
         if (parameters.length == 2) {
-            sendText(httpExchange, JsonConverter.convertTaskList(taskManager.getSubtasks()));
-        } else if (parameters.length == 3) {
+            sendText(httpExchange, JsonConverter.convertTaskList(taskManager.getEpics()));
+        } else {
             int id;
-
             try {
                 id = Integer.parseInt(parameters[2]);
             } catch (NumberFormatException e) {
                 sendNotFound(httpExchange, "Id can't restore from json. Check it");
                 return;
             }
-
-            Task task = taskManager.getSubtaskById(id);
-            if (task != null) {
+            Epic task = taskManager.getEpicById(id);
+            if (task == null) {
+                sendServerError(httpExchange, "Epic can't find");
+            } else if (parameters.length == 3) {
                 sendText(httpExchange, JsonConverter.convertTask(task));
             } else {
-                sendServerError(httpExchange, "Task can't find");
+                sendText(httpExchange, JsonConverter.convertTaskList(taskManager.getEpicSubtasks(task)));
             }
-        } else {
-            sendServerError(httpExchange, "URI not found");
         }
     }
 
@@ -52,45 +53,40 @@ public class SubtaskHandler extends BaseHttpHandler {
             return;
         }
 
-        InputStream inputStream = httpExchange.getRequestBody();
-        String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        String body = getBodyString(httpExchange);
 
-        Subtask task;
+        Epic task;
         int idFromBody;
 
         try {
-            task = JsonConverter.parseSubtask(body);
+            task = JsonConverter.parseEpic(body);
             idFromBody = task.getId();
         } catch (JsonSyntaxException exp) {
             sendServerError(httpExchange, "Object can't restore from json. Check json schema");
             return;
         }
 
-        if (taskManager.getSubtaskById(idFromBody) == null) {
+        if (taskManager.getTaskById(idFromBody) == null) {
             try {
-                taskManager.createSubtask(task);
+                taskManager.createEpic(task);
                 sendText(httpExchange, "Id " + idFromBody + " not found. Generated new id - " + task.getId());
             } catch (HasCrossingsException e) {
                 sendHasInteractions(httpExchange, "Object has interactions");
-            } catch (NotFoundException e) {
-                sendNotFound(httpExchange, "Epic not found");
             }
         } else {
             try {
-                taskManager.updateSubtask(task);
+                taskManager.updateEpic(task);
                 sendText(httpExchange, "");
             } catch (HasCrossingsException e) {
                 sendHasInteractions(httpExchange, "Object has interactions");
             } catch (NotFoundException e) {
                 sendNotFound(httpExchange, "id - " + task.getId() + " not found");
             }
-
         }
     }
 
     @Override
     protected void handleDeleteRequest(HttpExchange httpExchange, String[] parameters) throws IOException {
-
         if (parameters.length == 3) {
             int id;
             try {
@@ -99,8 +95,8 @@ public class SubtaskHandler extends BaseHttpHandler {
                 sendNotFound(httpExchange, "Id can't restore from json. Check it");
                 return;
             }
-            if (taskManager.getSubtaskById(id) != null) {
-                taskManager.removeSubtaskById(id);
+            if (taskManager.getEpicById(id) != null) {
+                taskManager.removeEpicById(id);
                 sendText(httpExchange, "");
             } else {
                 sendNotFound(httpExchange, "Id not found");
@@ -109,5 +105,4 @@ public class SubtaskHandler extends BaseHttpHandler {
             sendNotFound(httpExchange, "URI not found");
         }
     }
-
 }

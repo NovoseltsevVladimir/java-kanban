@@ -1,4 +1,4 @@
-package ru.practicum.kanban.manager;
+package ru.practicum.kanban.exceptions;
 
 import java.io.IOException;
 

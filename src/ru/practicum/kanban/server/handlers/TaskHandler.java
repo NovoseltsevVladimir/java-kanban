@@ -1,10 +1,13 @@
-package ru.practicum.kanban.server;
+package ru.practicum.kanban.server.handlers;
 
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import ru.practicum.kanban.manager.TaskManager;
 import ru.practicum.kanban.model.Task;
+import ru.practicum.kanban.exceptions.HasCrossingsException;
+import ru.practicum.kanban.server.JsonConverter;
+import ru.practicum.kanban.exceptions.NotFoundException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,8 +55,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
             return;
         }
 
-        InputStream inputStream = httpExchange.getRequestBody();
-        String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        String body = getBodyString(httpExchange);
 
         Task task;
         int idFromBody;

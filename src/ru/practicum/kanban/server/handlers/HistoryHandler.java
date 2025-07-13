@@ -1,18 +1,19 @@
-package ru.practicum.kanban.server;
+package ru.practicum.kanban.server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import ru.practicum.kanban.manager.TaskManager;
 import ru.practicum.kanban.model.Task;
+import ru.practicum.kanban.server.JsonConverter;
 
 import java.io.IOException;
 import java.util.List;
 
-public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
+public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
 
     private TaskManager taskManager;
 
-    public PrioritizedHandler(TaskManager taskManager) {
+    public HistoryHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
 
@@ -35,7 +36,7 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
         String[] parameters = path.split("/");
 
         if (parameters.length == 2) {
-            List<Task> historyList = taskManager.getPrioritizedTasks();
+            List<Task> historyList = taskManager.getHistory();
             String response = JsonConverter.convertTaskList(historyList);
             sendText(httpExchange, response);
         } else {

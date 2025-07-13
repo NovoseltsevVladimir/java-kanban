@@ -1,8 +1,8 @@
 package ru.practicum.kanban.manager;
 
 import ru.practicum.kanban.model.*;
-import ru.practicum.kanban.server.HasCrossingsException;
-import ru.practicum.kanban.server.NotFoundException;
+import ru.practicum.kanban.exceptions.HasCrossingsException;
+import ru.practicum.kanban.exceptions.NotFoundException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

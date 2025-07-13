@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Test;
 import ru.practicum.kanban.manager.InMemoryTaskManager;
 import ru.practicum.kanban.model.Task;
-import ru.practicum.kanban.server.HasCrossingsException;
+import ru.practicum.kanban.exceptions.HasCrossingsException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

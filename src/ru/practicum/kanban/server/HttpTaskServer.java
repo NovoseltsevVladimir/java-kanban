@@ -1,9 +1,9 @@
-package ru.practicum.kanban;
+package ru.practicum.kanban.server;
 
 import com.sun.net.httpserver.HttpServer;
 import ru.practicum.kanban.manager.InMemoryTaskManager;
-import ru.practicum.kanban.server.*;
 import ru.practicum.kanban.manager.TaskManager;
+import ru.practicum.kanban.server.handlers.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -35,12 +35,11 @@ public class HttpTaskServer {
         } catch (IOException e) {
             System.out.println("Не удалось создать и запустить сервер " + e.getStackTrace());
         }
-
-        System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
     }
 
     public void start() {
         httpServer.start();
+        System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
     }
 
     public void stop() {

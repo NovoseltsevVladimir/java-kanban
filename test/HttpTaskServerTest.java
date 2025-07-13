@@ -2,12 +2,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 
-import ru.practicum.kanban.HttpTaskServer;
-import ru.practicum.kanban.manager.HistoryManager;
+import ru.practicum.kanban.server.HttpTaskServer;
 import ru.practicum.kanban.manager.InMemoryTaskManager;
-import ru.practicum.kanban.manager.TaskManager;
 import ru.practicum.kanban.model.Epic;
-import ru.practicum.kanban.model.Status;
 import ru.practicum.kanban.model.Subtask;
 import ru.practicum.kanban.model.Task;
 import ru.practicum.kanban.server.JsonConverter;

@@ -1,9 +1,10 @@
-package ru.practicum.kanban.server;
+package ru.practicum.kanban.server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class BaseHttpHandler implements HttpHandler {
@@ -73,5 +74,11 @@ public class BaseHttpHandler implements HttpHandler {
         sendServerError(httpExchange, "URI не найден");
     }
 
+    protected String getBodyString(HttpExchange httpExchange) throws IOException {
+
+        InputStream inputStream = httpExchange.getRequestBody();
+        String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        return body;
+    }
 }
 
